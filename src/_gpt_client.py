@@ -25,10 +25,11 @@ class GPTClient:
         self._messages: dict = []
         self._ai_client: openai.OpenAI = openai.OpenAI()
 
-    def add_message(self, role: GPTMessageRole, content: str):
+    def add_message(self, role: GPTMessageRole, data: str | dict | list):
+        data_in_json = json.dumps(data)
         self._messages.append({
             "role": role,
-            "content": content
+            "content": data_in_json
         })
 
     def clear_messages(self):
