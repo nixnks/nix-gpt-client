@@ -7,7 +7,7 @@ from ._validate import GPTSessionConstructorSchema
 
 class GPTClient:
     def __init__(self, model: GPTModel, top_p: float, presence_penalty: float, frequency_penalty: float,
-                 temperature: float):
+                 temperature: float, response_format: dict = None):
         GPTSessionConstructorSchema.model_validate({
             "model": model,
             "top_p": top_p,
@@ -21,6 +21,7 @@ class GPTClient:
         self._presence_penalty = presence_penalty
         self._frequency_penalty = frequency_penalty
         self._temperature = temperature
+        self.response_format = response_format
 
         self._messages: dict = []
         self._ai_client: openai.OpenAI = openai.OpenAI()
@@ -50,7 +51,8 @@ class GPTClient:
                 temperature=self._temperature,
                 top_p=self._top_p,
                 presence_penalty=self._presence_penalty,
-                frequency_penalty=self._frequency_penalty
+                frequency_penalty=self._frequency_penalty,
+                response_format = self.response_format
             )
             if response.choices:
                 return response.choices[0].message.content
