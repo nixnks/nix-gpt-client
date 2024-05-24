@@ -43,6 +43,10 @@ class GPTClient:
             "content": f"{schema_type} JSON schema: {json_schema}"
         })
 
+    def get_messages_token_count(self) -> int:
+        from ._tokens_count import num_token_from_message
+        return sum([num_token_from_message(message, self._model) for message in self._messages])
+
     def run(self):
         try:
             response = self._ai_client.chat.completions.create(
@@ -52,7 +56,7 @@ class GPTClient:
                 top_p=self._top_p,
                 presence_penalty=self._presence_penalty,
                 frequency_penalty=self._frequency_penalty,
-                response_format = self.response_format
+                response_format=self.response_format
             )
             if response.choices:
                 return response.choices[0].message.content
